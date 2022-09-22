@@ -1,4 +1,4 @@
-export interface Error {
+export interface ExpressError {
     status?: number;
     message?: string;
 }
