@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "NODE_ENV=production nodemon src/server/server.ts",
-    "dev": "concurrently \"vite\" \"nodemon src/server/server.ts\"",
+    "start": "NODE_ENV=production nodemon --esm src/server/server.ts",
+    "dev": "concurrently \"vite\" \"nodemon --esm src/server/server.ts\"",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -23,7 +23,19 @@
     "@vitejs/plugin-react": "^2.0.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
-    "typescript": "^4.6.4",
+    "typescript": "^4.8.3",
     "vite": "^3.0.7"
-  }
+  },
+  "description": "You need to install the following dependencies using npm",
+  "main": ", thank you!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hankthetank27/radish.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hankthetank27/radish/issues"
+  },
+  "homepage": "https://github.com/hankthetank27/radish#readme"
 }

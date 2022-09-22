@@ -1,7 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from "path";
-import { api } from "./routes/api.ts"
-import { Error } from '../types.ts';
+import { fileURLToPath } from 'url';
+import { Error } from '../types/types';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -10,8 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.resolve(__dirname, '../dist')));
+    app.use(express.static(path.resolve(__dirname, '../../dist')));
 }
+
+app.use((req, res) => res.status(404).send('page not found'));
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     const defaultErr = {
