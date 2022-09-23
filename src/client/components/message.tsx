@@ -1,9 +1,9 @@
-interface MessageProps {
+interface Props {
   message: string
-}
+};
 
-export const Message = ({ message }: MessageProps) => {
+export const Message = ({ message }: Props) => {
   return (
     <div className="message">{message}</div>
-  )
-}
+  );
+};

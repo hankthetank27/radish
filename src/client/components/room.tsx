@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import { MoveButton } from './moveButton';
 import { ChatBox } from './chatBox';
@@ -14,6 +14,12 @@ export const Room = ({ socket }: Props) => {
   const [x, setX] = useState(350);
   const [y, setY] = useState(350);
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  //navigate back if room out of range
+  if (!id || parseInt(id) < 1 || parseInt(id) > 5){
+    navigate('/');
+  }
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
     p5.createCanvas(700, 700).parent(canvasParentRef);
@@ -39,7 +45,7 @@ export const Room = ({ socket }: Props) => {
       <div className='yValue'>{y}</div>
       <div className='mainContainer'>
         <Sketch setup={setup} draw={draw} />
-        <ChatBox socket={socket} />
+        <ChatBox socket={socket} id={id} />
       </div>
     </div>
   )

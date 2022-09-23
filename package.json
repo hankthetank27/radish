@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
+  "nodemonConfig" : {"ignore" : ["db/*"]},
   "scripts": {
     "start": "PORT=3000 NODE_ENV=production nodemon --esm src/server/server.ts",
     "dev": "concurrently \"vite\" \"nodemon --esm src/server/server.ts\"",

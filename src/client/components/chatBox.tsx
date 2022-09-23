@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import { Message } from "./message"
 
 interface Props {
-  socket: any
-}
+  socket: any;
+  id: string | undefined;
+};
 
-export const ChatBox = ({ socket }: Props) => {
+export const ChatBox = ({ socket, id }: Props) => {
 
-  const [messages, setMessages] = useState<Array<any>>([]);
-  const [handleChange, setHanldeChange] = useState('');
+  const [ messages, setMessages ] = useState<Array<any>>([]);
+  const [ handleChange, setHanldeChange ] = useState('');
 
   const makeMessage = (message: string) => {
     return <Message message={message} />
@@ -21,20 +22,22 @@ export const ChatBox = ({ socket }: Props) => {
           return [...prevMessages, makeMessage(message)];
         });
       });
-    }
+
+      socket.emit('join-room', id);
+    };
   }, [socket]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/getMessages')
+    fetch(`http://localhost:3000/api/getMessages/${id}`)
       .then(res => res.json())
       .then(data => {
         const newMessages = [];
         for (const message of data) {
           newMessages.push(makeMessage(message));
-        }
+        };
         setMessages(newMessages);
-      })
-  }, []);
+      });
+  }, [id]);
 
   return (
     <div className="chatBox">
@@ -46,11 +49,11 @@ export const ChatBox = ({ socket }: Props) => {
         <input className="chatInput" value={handleChange} onChange={(e) => {
           e.preventDefault();
           setHanldeChange(e.target.value);
-        }} />
+        }}/>
 
         <button className="chatSend" onClick={(e) => {
           e.preventDefault();
-          socket.emit('send-message', handleChange)
+          socket.emit('send-message', handleChange, id)
           setHanldeChange('');
         }}>Send</button>
 

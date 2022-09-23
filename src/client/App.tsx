@@ -7,7 +7,7 @@ import './App.css'
 
 function App() {
 
-  const [socket, setSocket] = useState<any>(null);
+  const [ socket, setSocket ] = useState<any>(null);
 
   useEffect(() => {
     setSocket(io('http://localhost:3000/'));

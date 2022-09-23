@@ -1,11 +1,14 @@
-import { Room } from './room';
 import { Link } from 'react-router-dom'
 
 export const Lobby = () => {
 
   const links = [];
-  for (let i = 0; i < 10; i++){
-    links.push(<li><Link to={`/room/${i}`}>{`Room ${i}`}</Link></li>)
+  for (let i = 1; i <= 5; i++){
+    links.push(
+      <li>
+        <Link to={`/room/${i}`}>{`Room ${i}`}</Link>
+      </li>
+    )
   }
 
   return (

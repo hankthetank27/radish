@@ -34,13 +34,13 @@ const io = require("socket.io")(server, {
 });
 
 //write to chat db
-const readWriteJSONdb = (message: string) => {
-  fs.readFile(path.resolve(__dirname, './db.json'), 'utf-8', (err: any, data: any) => {
+const readWriteJSONdb = (message: string, room: number) => {
+  fs.readFile(path.resolve(__dirname, `../db/db${room}.json`), 'utf-8', (err: any, data: any) => {
 
     if (err) throw new Error(`error reading chat file: ${err}`);
     const updatedChat = [...JSON.parse(data), message];
 
-    fs.writeFile(path.resolve(__dirname, './db.json'), JSON.stringify(updatedChat), (err: any) => {
+    fs.writeFile(path.resolve(__dirname, `../db/db${room}.json`), JSON.stringify(updatedChat), (err: any) => {
       if (err) throw new Error(`error writing chat file: ${err}`);
     });
 
@@ -49,10 +49,17 @@ const readWriteJSONdb = (message: string) => {
 
 //handle websocket events
 io.on('connection', (socket: any) => {
-  socket.on('send-message', (message: string) => {
-    console.log(message);
-    readWriteJSONdb(message);
-    io.emit('receive-message', message);
+  socket.on('send-message', (message: string, room: number) => {
+    console.log(`message "${message}" received in room ${room}`);
+
+    // currently causing nodemon to restart on each write
+    //readWriteJSONdb(message, room);
+
+    io.in(room).emit('receive-message', message);
+  });
+
+  socket.on('join-room', (room: any) => {
+    socket.join(room);
   });
 });
 
