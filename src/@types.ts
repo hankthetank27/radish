@@ -1,4 +1,4 @@
-export interface AppProps {
+export interface BallProps {
     moveBall: React.Dispatch<React.SetStateAction<number>>;
     ballValue: number;
     text: string;

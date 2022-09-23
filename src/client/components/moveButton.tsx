@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { AppProps } from '../../@types';
+import { BallProps } from '../../@types';
 
-export const MoveButton: React.FC<PropsWithChildren<AppProps>> = ({ moveBall, ballValue, text }: AppProps) => {
+export const MoveButton: React.FC<PropsWithChildren<BallProps>> = ({ moveBall, ballValue, text }: BallProps) => {
     return (
-        <div>
+        <div className='moveButtonContainer'>
             <button onClick={ ()=> {moveBall(ballValue)}}>{text}</button>
         </div>
     )

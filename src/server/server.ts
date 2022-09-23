@@ -1,10 +1,17 @@
-import express, { Request, Response, NextFunction } from 'express';
-import path from "path";
-import { fileURLToPath } from 'url';
-import { ExpressError } from '../types/types';
+// import express, { Request, Response, NextFunction } from 'express';
+// import path from "path";
+// import { fileURLToPath } from 'url';
+// import { ExpressError } from '../@types';
+// import { router } from './routes/api';
+import { ExpressError } from '../@types';
+import { Request, Response, NextFunction } from 'express';
+const express = require('express');
+const path = require('path');
+const router = require('./routes/api')
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,9 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, '../../dist')));
-}
+};
 
-app.use((req, res) => res.status(404).send('page not found'));
+app.use('/api', router);
+
+app.use((req: Request, res: Response) => res.status(404).send('page not found'));
 
 app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
     const defaultErr = {
@@ -31,6 +40,4 @@ app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => 
 
 app.listen(PORT, () => {
     console.log(`Server listening on port: ${PORT}.`);
-})
-
-export {};
+});

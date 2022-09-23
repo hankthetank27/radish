@@ -2,7 +2,7 @@
   "name": "radish",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "PORT=3000 NODE_ENV=production nodemon --esm src/server/server.ts",
     "dev": "concurrently \"vite\" \"nodemon --esm src/server/server.ts\"",
