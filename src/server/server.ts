@@ -8,32 +8,12 @@ const cors = require('cors');
 const server = require('http').Server(app);
 const router = require('./routes/api');
 
-const io = require("socket.io")(server, {
-    cors: {
-      origin: '*',
-      methods: ['GET', 'POST']
-    }
-});
-
-io.on('connection', (socket: any) => {
-    socket.on('send-message', (message: string) => {
-        console.log(message)
-        fs.readFile(path.resolve(__dirname, './db.json'), 'utf-8', (err: any, data: any) => {
-            if (err) throw new Error('error reading file');
-            const updatedChat = [...JSON.parse(data), message];
-            fs.writeFile(path.resolve(__dirname, './db.json'), JSON.stringify(updatedChat), (err: any) => {
-                if (err) console.log(err)
-            })
-        });
-        io.emit('receive-message', message);
-    })
-});
-
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//serve static assests if in production mode
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, '../../dist')));
 } else {
@@ -43,12 +23,45 @@ if (process.env.NODE_ENV === 'production') {
         allowedHeaders: ['Content-Type'],
         credentials: true
     }))
+};
+
+//websocket connection
+const io = require("socket.io")(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST']
+    }
+});
+
+//write to chat db
+const readWriteJSONdb = (message: string) => {
+    fs.readFile(path.resolve(__dirname, './db.json'), 'utf-8', (err: any, data: any) => {
+
+        if (err) throw new Error(`error reading chat file: ${err}`);
+        const updatedChat = [...JSON.parse(data), message];
+
+        fs.writeFile(path.resolve(__dirname, './db.json'), JSON.stringify(updatedChat), (err: any) => {
+            if (err) throw new Error(`error writing chat file: ${err}`);
+        });
+
+    });
 }
 
+//handle websocket events
+io.on('connection', (socket: any) => {
+    socket.on('send-message', (message: string) => {
+        console.log(message);
+        readWriteJSONdb(message);
+        io.emit('receive-message', message);
+    })
+});
+
+//connect to api router
 app.use('/api', router);
 
 app.use((req: Request, res: Response) => res.status(404).send('page not found'));
 
+//global error handler
 app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
     const defaultErr = {
       log: 'Express error handler caught unknown middleware error',
