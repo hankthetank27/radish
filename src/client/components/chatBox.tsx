@@ -1,33 +1,48 @@
 import { useEffect, useState } from "react"
 import { Message } from "./message"
+import io  from 'socket.io-client'
 
 export const ChatBox = () => {
 
-    const [ messages, setMessages ] = useState<Array<string>>([]);
+    const [ socket, setSocket ] = useState<any>(null);
+    const [ messages, setMessages ] = useState<Array<any>>([]);
     const [ handleChange, setHanldeChange ] = useState('');
+
+    useEffect(() => {
+        setSocket(io('http://localhost:3000/'));
+    }, [])
+
+    useEffect(() => {
+        if (socket){
+            socket.on('receive-message', (message: string) => {
+                setMessages((prevMessages: Array<string>) => {
+                    const newMessages = [...prevMessages, makeMessage(message)]
+                    return newMessages;
+                });
+            });
+        }
+    }, [socket])
 
     useEffect(() => {
         fetch('http://localhost:3000/api/getMessages')
         .then(res => res.json())
         .then(data => {
-            console.log(data)
+            const newMessages = []
+            for (const message of data){
+                newMessages.push(makeMessage(message))
+            }
+            setMessages(newMessages)
         })
     }, [])
+
+    const makeMessage = (message: string) => {
+        return <Message message={message}/>
+    } 
     
-    const makeMessages = (messages: Array<string>) => {
-        const res = [];
-        for (const message of messages) {
-            res.push(<Message message={message}></Message>);
-        }
-        return res;
-    }
-
-    const currentChat = makeMessages(messages);
-
     return(
         <div className="chatBox">
             <div className="chatInnerBox">
-                {currentChat}
+                {messages}
             </div>
             <div className="inputContainer">
                 
@@ -38,8 +53,7 @@ export const ChatBox = () => {
 
                 <button className="chatSend" onClick={(e) => {
                     e.preventDefault();
-                    messages.push(handleChange);
-                    setMessages(messages);
+                    socket.emit('send-message', handleChange)
                     setHanldeChange('');
                 }}>Send</button>
 

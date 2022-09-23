@@ -9,7 +9,8 @@ const chatControllers = {
             if (err) throw new Error('error reading file');
             return res.send(JSON.parse(data));
         });
-    }
+    },
+
 };
 
 module.exports = chatControllers;

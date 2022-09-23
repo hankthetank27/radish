@@ -1,11 +1,34 @@
 import { ExpressError } from '../@types';
 import { Request, Response, NextFunction } from 'express';
+const fs = require('fs')
 const express = require('express');
-const path = require('path');
-const router = require('./routes/api');
-const cors = require('cors');
-
 const app = express();
+const path = require('path');
+const cors = require('cors');
+const server = require('http').Server(app);
+const router = require('./routes/api');
+
+const io = require("socket.io")(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST']
+    }
+});
+
+io.on('connection', (socket: any) => {
+    socket.on('send-message', (message: string) => {
+        console.log(message)
+        fs.readFile(path.resolve(__dirname, './db.json'), 'utf-8', (err: any, data: any) => {
+            if (err) throw new Error('error reading file');
+            const updatedChat = [...JSON.parse(data), message];
+            fs.writeFile(path.resolve(__dirname, './db.json'), JSON.stringify(updatedChat), (err: any) => {
+                if (err) console.log(err)
+            })
+        });
+        io.emit('receive-message', message);
+    })
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -37,6 +60,6 @@ app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => 
     return res.status(errorObj.status).json(errorObj.message);
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server listening on port: ${PORT}.`);
 });
