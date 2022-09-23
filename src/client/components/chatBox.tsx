@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import { Message } from "./message"
-import io from 'socket.io-client'
 
-export const ChatBox = () => {
+interface Props {
+  socket: any
+}
 
-  const [socket, setSocket] = useState<any>(null);
+export const ChatBox = ({ socket }: Props) => {
+
   const [messages, setMessages] = useState<Array<any>>([]);
   const [handleChange, setHanldeChange] = useState('');
 
@@ -13,15 +15,10 @@ export const ChatBox = () => {
   };
 
   useEffect(() => {
-    setSocket(io('http://localhost:3000/'));
-  }, []);
-
-  useEffect(() => {
     if (socket) {
       socket.on('receive-message', (message: string) => {
         setMessages((prevMessages: Array<string>) => {
-          const newMessages = [...prevMessages, makeMessage(message)];
-          return newMessages;
+          return [...prevMessages, makeMessage(message)];
         });
       });
     }

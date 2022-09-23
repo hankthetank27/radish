@@ -1,42 +1,27 @@
-import { useState } from 'react';
-import { MoveButton } from './components/moveButton';
-import { ChatBox } from './components/chatBox';
-import p5Types from 'p5';
-import Sketch from "react-p5";
+import { useState, useEffect } from 'react';
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import io from 'socket.io-client'
+import { Room } from './components/room'
+import { Lobby } from './components/lobby';
 import './App.css'
 
 function App() {
 
-  const [x, setX] = useState(350);
-  const [y, setY] = useState(350);
+  const [socket, setSocket] = useState<any>(null);
 
-  const setup = (p5: p5Types, canvasParentRef: Element) => {
-    p5.createCanvas(700, 700).parent(canvasParentRef);
-  };
-
-  const draw = (p5: p5Types) => {
-    p5.background(0);
-    p5.ellipse(x, y, 70, 70);
-  };
+  useEffect(() => {
+    setSocket(io('http://localhost:3000/'));
+  }, []);
 
   return (
-    <div className="App">
-      <div className="buttonPairContainer">
-        <MoveButton moveBall={setX} ballValue={x + 20} text={'X++'} />
-        <MoveButton moveBall={setX} ballValue={x - 20} text={'X--'} />
+    <HashRouter>
+      <div className="App">
+        <Routes>
+          <Route path='/' element={<Lobby/>}/>
+          <Route path='/room/:id' element={<Room socket={socket}/>}/>
+        </Routes>
       </div>
-      <div className='xValue'>{x}</div>
-      <div className="buttonPairContainer">
-        <MoveButton moveBall={setY} ballValue={y + 20} text={'Y++'} />
-        <MoveButton moveBall={setY} ballValue={y - 20} text={'Y--'} />
-      </div>
-      <div className='yValue'>{y}</div>
-      <div className='mainContainer'>
-        <Sketch setup={setup} draw={draw} />
-        <ChatBox />
-      </div>
-
-    </div>
+    </HashRouter>
   )
 }
 

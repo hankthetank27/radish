@@ -10,6 +10,14 @@
     justify-content: center;
 }
 
+.lobbyBorder{
+    display: flex;
+    justify-content: center;
+    border: 4px solid black;
+    width: 700px;
+    height: 800px;
+}
+
 .mainContainer {
     display: flex;
     justify-content: center;
