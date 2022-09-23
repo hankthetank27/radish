@@ -1,9 +1,9 @@
 interface MessageProps {
-    message: string
+  message: string
 }
 
 export const Message = ({ message }: MessageProps) => {
-    return (
-        <div className="message">{message}</div>
-    )
+  return (
+    <div className="message">{message}</div>
+  )
 }
