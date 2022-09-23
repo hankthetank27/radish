@@ -3,8 +3,6 @@ const express = require('express');
 const chatControllers = require('../controllers/chatControllers');
 const router = express.Router();
 
-router.get('/getMessages', chatControllers.getMessages, (req: Request, res: Response) => {
-    res.json(res.locals.messages);
-})
+router.get('/getMessages', chatControllers.getMessages)
 
 module.exports = router;

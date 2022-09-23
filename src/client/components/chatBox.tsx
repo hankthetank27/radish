@@ -1,4 +1,4 @@
-import { ReactComponentElement, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Message } from "./message"
 
 export const ChatBox = () => {
@@ -7,8 +7,8 @@ export const ChatBox = () => {
     const [ handleChange, setHanldeChange ] = useState('');
 
     useEffect(() => {
-        fetch('/api/getMessages')
-        .then(res => res.json)
+        fetch('http://localhost:3000/api/getMessages')
+        .then(res => res.json())
         .then(data => {
             console.log(data)
         })

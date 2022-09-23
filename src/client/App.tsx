@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { MoveButton } from './components/moveButton';
+import { ChatBox } from './components/chatBox';
 import p5Types from 'p5';
 import Sketch from "react-p5";
 import './App.css'
-import { MoveButton } from './components/moveButton';
-import { ChatBox } from './components/chatBox';
 
 function App() {
 
