@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Message } from "./message"
+import { UserContext } from '../App';
 
 interface Props {
   socket: any;
@@ -10,6 +11,7 @@ export const ChatBox = ({ socket, id }: Props) => {
 
   const [ messages, setMessages ] = useState<Array<any>>([]);
   const [ handleChange, setHanldeChange ] = useState('');
+  const { userName } = useContext(UserContext);
 
   const makeMessage = (message: string) => {
     return <Message message={message} />
@@ -22,7 +24,6 @@ export const ChatBox = ({ socket, id }: Props) => {
           return [...prevMessages, makeMessage(message)];
         });
       });
-
       socket.emit('join-room', id);
     };
   }, [socket]);
@@ -41,6 +42,7 @@ export const ChatBox = ({ socket, id }: Props) => {
 
   return (
     <div className="chatBox">
+      {userName}
       <div className="chatInnerBox">
         {messages}
       </div>

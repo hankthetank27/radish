@@ -50,12 +50,13 @@ const readWriteJSONdb = (message: string, room: number) => {
 //handle websocket events
 io.on('connection', (socket: any) => {
   socket.on('send-message', (message: string, room: number) => {
+
     console.log(`message "${message}" received in room ${room}`);
 
     // currently causing nodemon to restart on each write
     //readWriteJSONdb(message, room);
-
     io.in(room).emit('receive-message', message);
+    
   });
 
   socket.on('join-room', (room: any) => {
