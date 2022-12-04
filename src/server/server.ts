@@ -28,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 //websocket connection
 const io = require("socket.io")(server, {
   cors: {
+    
     origin: '*',
     methods: ['GET', 'POST']
   }

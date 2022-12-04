@@ -6,4 +6,4 @@ router.get('/getMessages/:id', chatControllers.getMessages);
 
 
 module.exports = router;
-export {};
+export {}; 

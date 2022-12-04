@@ -13,11 +13,7 @@ export const Lobby = () => {
     if (!userName) return;
     const linksArr = [];
       for (let i = 1; i <= 5; i++){
-        linksArr.push(
-          <li>
-            <Link to={`/room/${i}`}>{`Room ${i}`}</Link>
-          </li>
-        )
+        linksArr.push(<li><Link to={`/room/${i}`}>{`Room ${i}`}</Link></li>);
       }
       setLinks(linksArr);
   }, [userName]);
